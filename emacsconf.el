@@ -10,8 +10,10 @@
 (prefer-coding-system 'utf-8)
 (setq default-buffer-file-coding-system 'utf-8)
 
-; Some default variables
-(setq tab-width 4)
+; Setting default indentation
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(setq indent-line-function 'insert-tab)
 
 ; Loading theme
 (load-theme 'zenburn t)
@@ -24,12 +26,12 @@
 (ido-everywhere 1)
 (setq ido-enable-flex-matching t)
 (setq ido-create-new-buffer 'always)
-(setq ido-enable-tramp-completion nil)
-(setq ido-enable-last-directory-history nil)
+;(setq ido-enable-tramp-completion nil)
+;(setq ido-enable-last-directory-history nil)
 (setq ido-confirm-unique-completion nil) ;; wait for RET, even for unique?
 (setq ido-show-dot-for-dired t) ;; put . as the first item
 ;(setq ido-use-filename-at-point t) ;; prefer files names near point
-(setq ido-use-filename-at-point 'guess) 
+;(setq ido-use-filename-at-point 'guess) 
 
 ; Shortcut to resize buffer to 80 columns
 (defun fix-window-horizontal-size (width)
@@ -52,7 +54,6 @@
 ; Setting line numbers
 (global-linum-mode t)
 (setq linum-format "%3s ")
-
 
 ; Setting default indentation of python-hook
 (add-hook 'python-mode-hook (lambda () (setq python-indent 4)))
