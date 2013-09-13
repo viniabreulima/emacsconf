@@ -57,13 +57,22 @@
 ; Setting default indentation of python-hook
 (add-hook 'python-mode-hook (lambda () (setq python-indent 4)))
 
+; Configuring JS2-mode
+(autoload 'js2-mode "js2" nil t)
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+
+; Configuring CSS mode
+(require 'rainbow-mode)
+(defun all-css-modes() (css-mode) (rainbow-mode)) 
+(add-to-list 'auto-mode-alist '("\\.css$" . all-css-modes)) 
+
 ; Configuring Web-mode
 (require 'web-mode)
 (defun web-mode-hook ()
   "Hooks for Web mode."
-  (setq web-mode-markup-indent-offset 4)
-  (setq web-mode-css-indent-offset 4)
+  (setq web-mode-markup-indent-offset 2)
   (setq web-mode-code-indent-offset 4)
+;  (setq web-mode-indent-style 2)
   (add-hook 'local-write-file-hooks
             (lambda ()
 	      (delete-trailing-whitespace)
@@ -71,6 +80,5 @@
 )
 (add-hook 'web-mode-hook  'web-mode-hook)
 (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.htm?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.htm\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
