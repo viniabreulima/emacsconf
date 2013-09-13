@@ -11,3 +11,5 @@ Features
 - Web-mode
 - Fill-column-indicator
 - Python-mode-hook
+
+Install instructions on emacsconf.el

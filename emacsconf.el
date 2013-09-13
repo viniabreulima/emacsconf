@@ -2,8 +2,9 @@
 ;; https://github.com/viniabreulima/emacsconf.git ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Setting load-path
-(add-to-list 'load-path ".")
+;; Quick install:
+;; (add-to-list 'load-path "~/.emacs.d/emacsconf/")
+;; (load "~/.emacs.d/emacsconf/emacsconf.el")
 
 ; Setting encoding preferences
 (prefer-coding-system 'utf-8)
