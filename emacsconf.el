@@ -4,11 +4,18 @@
 
 ;; Quick install:
 ;; (add-to-list 'load-path "~/.emacs.d/emacsconf/")
+;; (add-to-list 'custom-theme-load-path "~/.emacs.d/emacsconf/themes/")
 ;; (load "~/.emacs.d/emacsconf/emacsconf.el")
 
 ; Setting encoding preferences
 (prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
 (setq default-buffer-file-coding-system 'utf-8)
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+;; MS Windows clipboard is UTF-16LE 
+(set-clipboard-coding-system 'utf-16le-dos)
 
 ; Setting default indentation
 (setq-default indent-tabs-mode nil)
