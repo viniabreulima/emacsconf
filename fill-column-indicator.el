@@ -1,9 +1,9 @@
 ;;; fill-column-indicator.el --- Graphically indicate the fill column
 
-;; Copyright (c) 2011-2012 Alp Aker
+;; Copyright (c) 2011-2014 Alp Aker
 
 ;; Author: Alp Aker <alp.tekin.aker@gmail.com>
-;; Version: 1.85
+;; Version: 1.87
 ;; Keywords: convenience
 
 ;; This program is free software; you can redistribute it and/or
@@ -55,8 +55,7 @@
 ;; fill comments at, for example, column 70, but want a vertical rule at
 ;; column 80 or 100 to indicate the maximum line length for code.)  The
 ;; default behavior (showing the indicator at the fill column) is specified
-;; by setting fci-rule-column to nil.  Note that this variable becomes buffer
-;; local when set.
+;; by setting fci-rule-column to nil.
 
 ;; On graphical displays the fill-column rule is drawn using a bitmap
 ;; image.  Its color is controlled by the variable `fci-rule-color', whose
@@ -181,8 +180,8 @@
 ;; Thanks to Ami Fischman, Christopher Genovese, Michael Hoffman, José
 ;; Alfredo Romero L., R. Lange, Joe Lisee, José Lombera, Frank Meffert,
 ;; Mitchell Peabody, sheijk, and an anonymous BT subscriber for bug reports
-;; and suggestions.  Special thanks to lomew, David Röthlisberger, and Pär
-;; Wieslander for code contributions.
+;; and suggestions.  Special thanks to lomew, John Lamp, David Röthlisberger,
+;; and Pär Wieslander for code contributions.
 
 ;;; Code:
 
@@ -214,8 +213,6 @@ function `fci-mode' is run."
   :type '(choice (const :tag "Use the fill column" nil)
                  (integer :tag "Use a custom column"
                           :match (lambda (w val) (fci-posint-p val)))))
-
-(make-variable-buffer-local 'fci-rule-column)
 
 (defcustom fci-rule-color "#cccccc"
   "Color used to draw the fill-column rule.
@@ -393,13 +390,13 @@ U+E000-U+F8FF, inclusive)."
 
 ;; Hooks we use.
 (defconst fci-hook-assignments
-  '((after-change-functions fci-redraw-region t)
-    (before-change-functions fci-extend-rule-for-deletion t)
-    (window-scroll-functions fci-update-window-for-scroll t)
+  '((after-change-functions fci-redraw-region t t)
+    (before-change-functions fci-extend-rule-for-deletion nil t)
+    (window-scroll-functions fci-update-window-for-scroll nil t)
     (window-configuration-change-hook  fci-redraw-frame)
-    (post-command-hook  fci-post-command-check t)
-    (change-major-mode-hook turn-off-fci-mode t)
-    (longlines-mode-hook  fci-update-all-windows t)))
+    (post-command-hook  fci-post-command-check nil t)
+    (change-major-mode-hook turn-off-fci-mode nil t)
+    (longlines-mode-hook fci-update-all-windows nil t)))
 
 ;;; ---------------------------------------------------------------------
 ;;; Miscellany
@@ -454,7 +451,7 @@ on troubleshooting.)"
             (fci-set-local-vars)
             (fci-get-frame-dimens)
             (dolist (hook fci-hook-assignments)
-              (add-hook (car hook) (nth 1 hook) nil (nth 2 hook)))
+              (apply 'add-hook hook))
             (setq fci-column (or fci-rule-column fill-column)
                   fci-tab-width tab-width
                   fci-limit (if fci-newline
@@ -470,7 +467,7 @@ on troubleshooting.)"
     (fci-restore-display-table)
     (fci-restore-local-vars)
     (dolist (hook fci-hook-assignments)
-      (remove-hook (car hook) (nth 1 hook) (nth 2 hook)))
+      (remove-hook (car hook) (nth 1 hook) (nth 3 hook)))
     (fci-delete-overlays-buffer)
     (dolist (var fci-internal-vars)
       (set var nil))))
@@ -492,9 +489,17 @@ on troubleshooting.)"
 
 (defun fci-overlay-fills-background-p (olay)
   "Return true if OLAY specifies a background color."
-  (and (overlay-get olay 'face)
-       (not (eq (face-attribute (overlay-get olay 'face) :background nil t)
-                'unspecified))))
+  (let ((olay-face (overlay-get olay 'face)))
+    (when olay-face
+      (if (facep olay-face)
+          (not (eq (face-attribute olay-face :background nil t) 'unspecified))
+        (if (consp olay-face)
+            (if (listp (cdr olay-face))
+                (if (facep (car olay-face))
+                    (not (memq t (mapcar #'(lambda (f) (eq (face-attribute f :background nil t) 'unspecified))
+                                         olay-face)))
+                  (plist-member olay-face :background))
+              (eq (car olay-face) 'background-color)))))))
 
 (defun fci-competing-overlay-p (posn)
   "Return true if there is an overlay at POSN that fills the background."

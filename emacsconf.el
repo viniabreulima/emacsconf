@@ -1,7 +1,11 @@
 ;;;;;;;;;;;;;;;; My confs for Emacs ;;;;;;;;;;;;;;;;
 ;; https://github.com/viniabreulima/emacsconf.git ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+;; Repos:
+;; Web-mode - http://web-mode.org/
+;; FLX-IDO - https://github.com/lewang/flx
+;; Fill-Column-Indicator - https://github.com/alpaker/Fill-Column-Indicator
+;;
 ;; Quick install:
 ;; (add-to-list 'load-path "~/.emacs.d/emacsconf/")
 ;; (add-to-list 'custom-theme-load-path "~/.emacs.d/emacsconf/themes/")
@@ -34,9 +38,12 @@
 ; Configuring IDO
 (setq confirm-nonexistent-file-or-buffer nil)
 (require 'ido)
-(require 'ido-better-flex)
+(require 'flx-ido)
 (ido-mode 1)
 (ido-everywhere 1)
+(flx-ido-mode 1)
+;; disable ido faces to see flx highlights.
+(setq ido-use-faces nil)
 (setq ido-enable-flex-matching t)
 (setq ido-create-new-buffer 'always)
 ;(setq ido-enable-tramp-completion nil)
@@ -117,7 +124,12 @@
 	    nil
     ))
 )
+
 (add-hook 'web-mode-hook  'web-mode-hook)
 (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.htm\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+
+; Configuring AS3 Mode
+(autoload 'actionscript-mode "actionscript-mode" "Major mode for actionscript." t)
+(add-to-list 'auto-mode-alist '("\\.as$" . actionscript-mode))
