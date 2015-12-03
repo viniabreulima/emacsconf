@@ -7,6 +7,12 @@
 ;; (add-to-list 'custom-theme-load-path "~/.emacs.d/emacsconf/themes/")
 ;; (load "~/.emacs.d/emacsconf/emacsconf.el")
 
+; Global settings
+; (setq max-specpdl-size 1000)
+
+; Ignore startup screen
+(setq inhibit-startup-screen t)
+
 ; Setting encoding preferences
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
